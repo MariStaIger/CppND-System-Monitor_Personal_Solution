@@ -47,4 +47,9 @@ long int Process::UpTime() {
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const { 
 
-    return (stol(this->ram_) > stol(a.ram_)); }
+    if (stol(ram_) > stol(a.ram_)){
+        return true;
+    } else{
+        return false;
+    }
+ }
