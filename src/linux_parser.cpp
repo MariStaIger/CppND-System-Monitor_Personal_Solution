@@ -277,6 +277,7 @@ string LinuxParser::User(int pid) {
   string user;
   string x;
   string uid;
+  string user_output;
 
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
@@ -285,11 +286,11 @@ string LinuxParser::User(int pid) {
       std::istringstream linestream(line);
       linestream >> user >> x >> uid;
       if(uid == LinuxParser::Uid(pid)){
-        return user;
+         user_output = user;
       } 
     }
   }
-  return 0;
+return user_output;
 }
 
 // TODO: Read and return the uptime of a process
@@ -299,7 +300,6 @@ long LinuxParser::UpTime(int pid) {
   string line;
   string value;
   vector<string> allValues;
-  long seconds;
 
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
   if (filestream.is_open()) {
@@ -307,9 +307,7 @@ long LinuxParser::UpTime(int pid) {
     std::istringstream linestream(line);
     while(linestream >> value){
       allValues.push_back(value);
-    } 
-    seconds = LinuxParser::UpTime() - stol(allValues[21])/sysconf(_SC_CLK_TCK);  
-
+    }
   }
-  return seconds;
+  return (stol(allValues[21])/sysconf(_SC_CLK_TCK));
 }

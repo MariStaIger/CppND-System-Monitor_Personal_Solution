@@ -6,6 +6,8 @@
 
 #include "process.h"
 #include "linux_parser.h"
+#include "system.h"
+#include "format.h"
 
 using std::string;
 using std::to_string;
@@ -18,10 +20,15 @@ int Process::Pid() {
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
 
+    // total_time = stol(allValues[13]) + stol(allValues[14])
     long total_time = LinuxParser::ActiveJiffies(Pid());
-    long seconds = LinuxParser::UpTime(Pid());
 
-    float cpu_util = 100 * (total_time/sysconf(_SC_CLK_TCK))/(seconds);
+    //seconds = LinuxParser::UpTime() - stol(allValues[21])/sysconf(_SC_CLK_TCK)
+    long systemUp_time = LinuxParser::UpTime();
+
+    float seconds = systemUp_time - (LinuxParser::UpTime(Pid())/sysconf(_SC_CLK_TCK));
+
+    float cpu_util = (total_time/sysconf(_SC_CLK_TCK))/(seconds);
 
     return cpu_util; 
 }
@@ -46,7 +53,6 @@ long int Process::UpTime() {
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const { 
-
     if (stol(ram_) > stol(a.ram_)){
         return true;
     } else{
