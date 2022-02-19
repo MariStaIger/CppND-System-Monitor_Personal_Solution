@@ -47,15 +47,11 @@ string Process::User() {
 
 // TODO: Return the age of this process (in seconds)
 long int Process::UpTime() { 
-    return LinuxParser::UpTime(Pid());
+    return LinuxParser::UpTime() - LinuxParser::UpTime(Pid());
 }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const { 
-    if (stol(ram_) > stol(a.ram_)){
-        return true;
-    } else{
-        return false;
-    }
+    return stol(ram_) > stol(a.ram_);
  }

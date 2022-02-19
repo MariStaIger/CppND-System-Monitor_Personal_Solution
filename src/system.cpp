@@ -9,11 +9,7 @@
 #include "system.h"
 #include "linux_parser.h"
 
-using std::set;
-using std::size_t;
-using std::string;
-using std::vector;
-using std::sort;
+using namespace std;
 
 /*You need to complete the mentioned TODOs in order to satisfy the rubric criteria "The student will be able to extract and display basic data about the system."
 
@@ -28,8 +24,8 @@ vector<Process>& System::Processes() {
     processes_.clear();
     vector<int> pids = LinuxParser::Pids();
     for(size_t i = 0; i < pids.size(); i++){
-     Process process(pids[i]);
-     processes_.push_back(process);
+     // No need to call constructor when using emplace_back
+     processes_.emplace_back(pids[i]);
     }
 
     sort(processes_.begin(), processes_.end());

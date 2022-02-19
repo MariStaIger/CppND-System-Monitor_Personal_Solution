@@ -78,13 +78,13 @@ float LinuxParser::MemoryUtilization() {
   float percentage;
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line) && key != "MemFree") {
+    while (std::getline(filestream, line) && key != filterMemFreeString) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       linestream >> key >> value >> unit;
-      if(key == "MemTotal"){
+      if(key == filterMemTotalString){
         memTotal = std::stof(value);
-      } else if(key == "MemFree"){
+      } else if(key == filterMemFreeString){
         memFree = std::stof(value);
       }
     }
@@ -180,10 +180,10 @@ int LinuxParser::TotalProcesses() {
   int procsTotal;
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line) && key != "processes") {
+    while (std::getline(filestream, line) && key != filterProcesses) {
       std::istringstream linestream(line);
       linestream >> key >> value;
-      if(key == "processes"){
+      if(key == filterProcesses){
         procsTotal = std::stoi(value);
       } 
     }
@@ -199,10 +199,10 @@ int LinuxParser::RunningProcesses() {
   int procsRunning;
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line) && key != "procs_running") {
+    while (std::getline(filestream, line) && key != filterRunningProcesses) {
       std::istringstream linestream(line);
       linestream >> key >> value;
-      if(key == "procs_running"){
+      if(key == filterRunningProcesses){
         procsRunning = std::stoi(value);
       } 
     }
@@ -234,11 +234,11 @@ string LinuxParser::Ram(int pid) {
 
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line) && key != "VmSize") {
+    while (std::getline(filestream, line) && key != filterProcMem) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       linestream >> key >> value;
-      if(key == "VmSize"){
+      if(key == filterProcMem){
         valuel = stol(value) / 1024;
       } 
     }
@@ -257,11 +257,11 @@ string LinuxParser::Uid(int pid) {
 
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line) && key != "Uid") {
+    while (std::getline(filestream, line) && key != filterUID) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       linestream >> key >> value;
-      if(key == "Uid"){
+      if(key == filterUID){
         uid = value;
       } 
     }
